@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:second_api_project/models/CategoryModel.dart';
+import 'package:second_api_project/models/order_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class CustomHttpRequest {
   static const Map<String, String> defaultHeader = {
@@ -24,6 +29,47 @@ class CustomHttpRequest {
     print("Token is ${sharedPreferences.getString("token")} ");
 
     return header;
+  }
+
+
+
+  fetchOrderData() async {
+    List<OrderModel> orderList = [];
+    late OrderModel orderModel;
+
+    var responce = await http.get(Uri.parse('${CustomHttpRequest.uri}${CustomHttpRequest.orderApi}'),
+        headers: await CustomHttpRequest().getHeaderWithToken() );
+
+    if (responce.statusCode == 200) {
+      var data = jsonDecode(responce.body);
+      print("Order list are $data");
+      for (var item in data) {
+        orderModel = OrderModel.fromJson(item);
+        orderList.add(orderModel);
+      }
+    }
+
+    return orderList;
+  }
+
+
+  fetchCategoryData() async {
+    List<CategoryModel> categoryList = [];
+    late CategoryModel categoryModel;
+
+    var responce = await http.get(Uri.parse('${CustomHttpRequest.uri}${CustomHttpRequest.orderApi}'),
+        headers: await CustomHttpRequest().getHeaderWithToken() );
+
+    if (responce.statusCode == 200) {
+      var data = jsonDecode(responce.body);
+      print("Order list are $data");
+      for (var item in data) {
+        categoryModel = CategoryModel.fromJson(item);
+        categoryList.add(categoryModel);
+      }
+    }
+
+    return categoryList;
   }
 
 

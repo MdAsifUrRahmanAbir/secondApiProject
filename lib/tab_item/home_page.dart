@@ -2,11 +2,8 @@ import 'dart:convert';
 
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:second_api_project/http/custome_http_request.dart';
-import 'package:second_api_project/models/order_model.dart';
-import 'package:second_api_project/screen/login_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:second_api_project/controller/order_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,27 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<OrderModel> orderData = [];
-  late OrderModel orderModel;
-
-
-
-  fetchOrderData() async {
-    var responce = await http.get(Uri.parse('${CustomHttpRequest.uri}${CustomHttpRequest.orderApi}'),
-        headers: await CustomHttpRequest().getHeaderWithToken() );
-
-    if (responce.statusCode == 200) {
-      var data = jsonDecode(responce.body);
-      print("Order list are $data");
-      for (var item in data) {
-        orderModel = OrderModel.fromJson(item);
-        setState(() {
-          orderData.add(orderModel);
-        });
-      }
-    }
-  }
-
 
 
 
@@ -44,12 +20,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    fetchOrderData();
+    Provider.of<OrderController>(context,listen: false).getOrderData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final orderList = Provider.of<OrderController>(context).orderList;
+
     return Scaffold(
       body: Column(
         children: [
@@ -74,14 +53,14 @@ class _HomePageState extends State<HomePage> {
                 ]
 
             ),
-            child:Text("Total Order Is: ${orderData.length}") ,
+            child:Text("Total Order Is: ${orderList.length}") ,
           ),
 
           const SizedBox(height: 10,),
 
           Expanded(
             child: ListView.builder(
-                itemCount: orderData.length,
+                itemCount: orderList.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Container(
@@ -110,9 +89,9 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Order Id: ${orderData[index].id}"),
-                            Text("Status: ${orderData[index].orderStatus!.orderStatusCategory!.name}"),
-                            Text("Price: ${orderData[index].price}"),
+                            Text("Order Id: ${orderList[index].id}"),
+                            Text("Status: ${orderList[index].orderStatus!.orderStatusCategory!.name}"),
+                            Text("Price: ${orderList[index].price}"),
                           ],
                         ),
 
@@ -121,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const Text("Payment Status"),
-                            orderData[index].payment?.paymentStatus==1?
+                            orderList[index].payment?.paymentStatus==1?
                             const Text("Payment Done.", style: TextStyle(color: Colors.green),)
                                 :const Text("Payment Due.", style: TextStyle(color: Colors.red)),
                           ],
