@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -120,7 +121,10 @@ class _AddCategoryState extends State<AddCategory> {
     return ModalProgressHUD(
       inAsyncCall: onProgress,
       opacity: 0.1,
-      progressIndicator: const CircularProgressIndicator(),
+      progressIndicator: const SpinKitThreeInOut(
+        color: Colors.orange,
+        size: 50.0,
+      ),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: aNavBarColor,
