@@ -2,6 +2,7 @@ import 'dart:convert';
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:second_api_project/controller/order_controller.dart';
 
@@ -59,7 +60,8 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 10,),
 
           Expanded(
-            child: ListView.builder(
+            child: orderList.isNotEmpty
+                ? ListView.builder(
                 itemCount: orderList.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
@@ -109,7 +111,11 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   );
-                }),
+                })
+                : const SpinKitThreeInOut(
+              color: Colors.orange,
+              size: 50.0,
+            )
           ),
         ],
       ),

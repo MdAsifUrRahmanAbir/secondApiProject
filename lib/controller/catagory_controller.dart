@@ -4,13 +4,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:second_api_project/http/custome_http_request.dart';
+import 'package:second_api_project/models/CategoryModel.dart';
 import 'package:second_api_project/models/order_model.dart';
 
 class CatagoryController with ChangeNotifier {
-  List<OrderModel> catagoryList = [];
+  List<CategoryModel> catagoryList = [];
 
   getCatagoryData()async {
-    catagoryList = await CustomHttpRequest().fetchOrderData();
+    catagoryList = await CustomHttpRequest().fetchCategoryData();
     notifyListeners();
   }
 
