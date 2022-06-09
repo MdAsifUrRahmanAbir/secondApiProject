@@ -53,6 +53,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             children: [
                               Column(
                                 children: [
+
                                   Expanded(
                                     flex: 4,
                                     child: Container(
